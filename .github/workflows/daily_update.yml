@@ -17,12 +17,14 @@ jobs:
         fetch-depth: 0   # 确保可以 push
         ref: main        # 改成你的默认分支，如果是 master，请改为 master
 
-    # 2. 下载远程 MITM 文件
+    # 2. 下载远程 MITM 文件并检查
     - name: Download MITM file
       run: |
         FILE_URL="https://whatshub.top/module/adultraplus.module"
-        curl -s -o mitm.module $FILE_URL
-        echo "Downloaded MITM file, total lines:"
+        curl -L -o mitm.module "$FILE_URL"
+        echo "Downloaded file preview (前 20 行):"
+        head -n 20 mitm.module
+        echo "Total lines:"
         wc -l mitm.module
 
     # 3. 清理指定 IP
@@ -30,7 +32,7 @@ jobs:
       run: |
         REMOVE_IPS=("192.168.1.1" "10.0.0.1")  # 在这里添加你要删除的 IP
         TMP_FILE=$(mktemp)
-        while read -r line; do
+        while IFS= read -r line; do
           skip=false
           for ip in "${REMOVE_IPS[@]}"; do
             if [[ "$line" == *"$ip"* ]]; then
@@ -45,6 +47,8 @@ jobs:
         mv "$TMP_FILE" mitm.module
         echo "After cleaning, total lines:"
         wc -l mitm.module
+        echo "Preview of cleaned file (前 20 行):"
+        head -n 20 mitm.module
 
     # 4. 提交更新到当前仓库
     - name: Commit and push
@@ -52,7 +56,6 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add mitm.module
-        # 只在有改动时提交
         if git diff-index --quiet HEAD; then
           echo "No changes to commit"
         else
