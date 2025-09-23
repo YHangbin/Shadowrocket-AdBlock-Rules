@@ -5,6 +5,7 @@ on:
     branches: [ main, master ]
     paths:
       - 'adultraplus.module'
+  workflow_dispatch:
 
 jobs:
   filter-ip:
@@ -99,3 +100,8 @@ jobs:
           git config --local user.name "GitHub Action"
           git commit -m "Auto-filter: Remove specified IP addresses (118.31.125.171, 112.124.203.116, 118.31.123.175) from hostname in adultraplus.module"
           git push
+
+      - name: No changes detected
+        if: steps.changes.outputs.no_changes == 'true'
+        run: |
+          echo "No changes were needed - specified IP addresses not found in hostname list"
