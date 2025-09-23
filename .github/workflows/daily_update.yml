@@ -1,4 +1,4 @@
-name: Daily MITM Update
+name: Daily MITM Update (Python)
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:      # 支持手动触发
 
 jobs:
-  update-mitm:
+  update-mitm-python:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,41 +14,54 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0   # 确保可以 push
-        ref: main        # 改成你的默认分支，如果是 master，请改为 master
+        fetch-depth: 0
+        ref: main  # 改成你的默认分支
 
-    # 2. 下载远程 MITM 文件并检查
-    - name: Download MITM file
-      run: |
-        FILE_URL="https://whatshub.top/module/adultraplus.module"
-        curl -L -o mitm.module "$FILE_URL"
-        echo "Downloaded file preview (前 20 行):"
-        head -n 20 mitm.module
-        echo "Total lines:"
-        wc -l mitm.module
+    # 2. 安装 Python（Ubuntu 默认有 Python，但指定版本）
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
 
-    # 3. 清理指定 IP
-    - name: Clean MITM file
+    # 3. 下载并处理 MITM 文件
+    - name: Download and clean MITM with Python
       run: |
-        REMOVE_IPS=("192.168.1.1" "10.0.0.1")  # 在这里添加你要删除的 IP
-        TMP_FILE=$(mktemp)
-        while IFS= read -r line; do
-          skip=false
-          for ip in "${REMOVE_IPS[@]}"; do
-            if [[ "$line" == *"$ip"* ]]; then
-              skip=true
-              break
-            fi
-          done
-          if [ "$skip" = false ]; then
-            echo "$line" >> "$TMP_FILE"
-          fi
-        done < mitm.module
-        mv "$TMP_FILE" mitm.module
-        echo "After cleaning, total lines:"
-        wc -l mitm.module
-        echo "Preview of cleaned file (前 20 行):"
-        head -n 20 mitm.module
+        python - <<'EOF'
+        import re
+        import urllib.request
+
+        # 配置
+        FILE_URL = "https://whatshub.top/module/adultraplus.module"
+        LOCAL_FILE = "mitm.module"
+
+        # 要删除的 IP 或正则列表
+        REMOVE_PATTERNS = [
+            r"192\.168\.1\.1",
+            r"10\.0\.0\.\d+"
+        ]
+
+        # 下载文件
+        with urllib.request.urlopen(FILE_URL) as response:
+            content = response.read().decode("utf-8")
+
+        lines = content.splitlines()
+        print(f"Downloaded {len(lines)} lines")
+
+        # 清理指定 IP/正则
+        cleaned_lines = []
+        for line in lines:
+            if any(re.search(pattern, line) for pattern in REMOVE_PATTERNS):
+                continue
+            cleaned_lines.append(line)
+
+        print(f"After cleaning: {len(cleaned_lines)} lines")
+        print("Preview of cleaned file (前 20 行):")
+        print("\n".join(cleaned_lines[:20]))
+
+        # 写入本地文件
+        with open(LOCAL_FILE, "w", encoding="utf-8") as f:
+            f.write("\n".join(cleaned_lines))
+        EOF
 
     # 4. 提交更新到当前仓库
     - name: Commit and push
@@ -59,6 +72,5 @@ jobs:
         if git diff-index --quiet HEAD; then
           echo "No changes to commit"
         else
-          git commit -m "Daily MITM update"
+          git commit -m "Daily MITM update (Python)"
           git push origin HEAD
-        fi
