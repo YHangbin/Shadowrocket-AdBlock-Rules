@@ -1,99 +1,35 @@
-name: Daily MITM Update
+name: Download and Commit File
 
 on:
   schedule:
-    - cron: '0 1 * * *'  # UTC 1点（北京时间 9点）
-  workflow_dispatch:     # 支持手动触发
-
-permissions:
-  contents: write        # 确保可以 push
+    - cron: '0 3 * * *'  # 每天 UTC 时间 3:00 执行（可按需调整）
+  workflow_dispatch:     # 允许手动触发
 
 jobs:
-  update-mitm:
+  download-and-commit:
     runs-on: ubuntu-latest
-
     steps:
-    # 1. Checkout 当前仓库
-    - name: Checkout repo
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0   # 确保可以 push
-        ref: main        # 如果你用的是 master，请改成 master
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    # 2. 下载远程 MITM 文件（带 User-Agent + 备用源）
-    - name: Download MITM file
-      run: |
-        PRIMARY_URL="https://whatshub.top/module/adultraplus.module"
-        BACKUP_URL="https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list"
-        UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+      - name: Download File
+        run: |
+          mkdir -p modules
+          curl -L "https://whatshub.top/module/adultraplus.module" -o modules/adultraplus.module
 
-        echo "📥 尝试主源: $PRIMARY_URL"
-        if curl -L -A "$UA" -o mitm.module "$PRIMARY_URL" 2>/dev/null && [ -s mitm.module ]; then
-          echo "✅ 主源下载成功"
-        else
-          echo "⚠️ 主源失败，尝试备用源: $BACKUP_URL"
-          if curl -L -A "$UA" -o mitm.module "$BACKUP_URL" 2>/dev/null && [ -s mitm.module ]; then
-            echo "✅ 备用源下载成功"
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and Push if Changed
+        run: |
+          git add modules/adultraplus.module
+          git status
+          if git status --porcelain | grep -q "modules/adultraplus.module"; then
+            git commit -m "chore: update adultraplus.module"
+            git push
+            echo "✅ File updated and pushed."
           else
-            echo "❌ 所有源均失败，退出"
-            exit 1
+            echo "ℹ️ No changes detected. Skipping commit."
           fi
-        fi
-
-        # 检查是否下载到 HTML 错误页（如 403/404）
-        if head -n 10 mitm.module | grep -qi "<html\|<title\|403\|404\|forbidden\|not found"; then
-          echo "❌ 检测到 HTML 错误页面，内容预览："
-          head -n 10 mitm.module
-          exit 1
-        fi
-
-        echo "📄 下载文件预览（前 20 行）："
-        head -n 20 mitm.module
-        echo "🔢 总行数: $(wc -l mitm.module)"
-
-    # 3. 清理指定 IP（可自定义）
-    - name: Clean MITM file
-      run: |
-        # 在这里添加你要删除的 IP 或关键词
-        REMOVE_IPS=("192.168.1.1" "10.0.0.1" "example.com")
-
-        TMP_FILE=$(mktemp)
-        while IFS= read -r line; do
-          skip=false
-          for ip in "${REMOVE_IPS[@]}"; do
-            if [[ "$line" == *"$ip"* ]]; then
-              skip=true
-              break
-            fi
-          done
-          if [ "$skip" = false ]; then
-            echo "$line" >> "$TMP_FILE"
-          fi
-        done < mitm.module
-
-        mv "$TMP_FILE" mitm.module
-
-        # 检查清理后是否还有内容
-        if [ ! -s mitm.module ]; then
-          echo "❌ 清理后文件为空，退出"
-          exit 1
-        fi
-
-        echo "🧹 清理后预览（前 20 行）："
-        head -n 20 mitm.module
-        echo "🔢 清理后总行数: $(wc -l mitm.module)"
-
-    # 4. 提交并推送更新
-    - name: Commit and push
-      run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add mitm.module
-
-        if git diff-index --quiet HEAD; then
-          echo "✅ 文件无变更，无需提交"
-        else
-          git commit -m "Daily MITM update"
-          git push origin HEAD
-          echo "✅ 已提交并推送更新"
-        fi
