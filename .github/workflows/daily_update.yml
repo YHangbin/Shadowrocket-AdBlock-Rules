@@ -10,15 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout 仓库
+    # 1. Checkout 当前仓库
     - name: Checkout repo
       uses: actions/checkout@v3
+      with:
+        fetch-depth: 0   # 确保可以 push
+        ref: main        # 改成你的默认分支，如果是 master，请改为 master
 
     # 2. 下载远程 MITM 文件
     - name: Download MITM file
       run: |
         FILE_URL="https://whatshub.top/module/adultraplus.module"
-        curl -o mitm.module $FILE_URL
+        curl -s -o mitm.module $FILE_URL
         echo "Downloaded MITM file, total lines:"
         wc -l mitm.module
 
@@ -49,5 +52,10 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add mitm.module
-        git commit -m "Daily MITM update" || echo "No changes to commit"
-        git push
+        # 只在有改动时提交
+        if git diff-index --quiet HEAD; then
+          echo "No changes to commit"
+        else
+          git commit -m "Daily MITM update"
+          git push origin HEAD
+        fi
