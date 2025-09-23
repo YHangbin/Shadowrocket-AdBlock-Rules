@@ -1,0 +1,53 @@
+#!name=Spotify
+#!desc=Description Here
+
+# US 是分组，需要在规则中设置
+[Proxy Group]
+US = fallback,BWGUS_MEGA,DMIT_US,US66,policy-select-name=DMIT_US,interval=600,timeout=5,url=http://www.gstatic.com/generate_204
+
+[Rule]
+# 歌词
+DOMAIN-SUFFIX,apic.musixmatch.com,BWG-JP
+DOMAIN-SUFFIX,lrclib.net,PROXY
+
+# 广告/视频
+DOMAIN-SUFFIX,video-ak.cdn.spotify.com,REJECT
+DOMAIN-SUFFIX,video-akpcw.spotifycdn.com,REJECT
+# 实验
+DOMAIN,cdn-spotify-experiments.conductrics.com,REJECT
+# 埋点
+DOMAIN-SUFFIX,firebaselogging-pa.googleapis.com,REJECT
+DOMAIN-SUFFIX,api-adservices.apple.com,REJECT
+# 营销/推广
+DOMAIN-SUFFIX,byspotify.com,REJECT
+DOMAIN-SUFFIX,tospotify.com,DIRECT
+DOMAIN-SUFFIX,spotify-everywhere.com,REJECT
+
+# 资源下载
+DOMAIN-SUFFIX,audio4-ak-spotify-com.akamaized.net,DIRECT
+DOMAIN-SUFFIX,heads-ak-spotify-com.akamaized.net,DIRECT
+DOMAIN-SUFFIX,spotify.com.edgesuite.net,DIRECT
+DOMAIN-SUFFIX,spotify.map.fastly.net,DIRECT
+DOMAIN-SUFFIX,spotify.map.fastlylb.net,DIRECT
+DOMAIN-SUFFIX,audio-ak-spotify-com.akamaized.net,DIRECT
+DOMAIN-SUFFIX,heads4-ak-spotify-com.akamaized.net,DIRECT
+DOMAIN-SUFFIX,pscdn.co,DIRECT
+DOMAIN-SUFFIX,scdn.co,DIRECT
+DOMAIN-SUFFIX,spotifycdn.com,DIRECT
+DOMAIN-SUFFIX,spotifycdn.net,DIRECT
+DOMAIN-SUFFIX,guc3-spclient.spotify.com,DIRECT
+#走直连后，首页广告就没了
+DOMAIN-SUFFIX,spclient.wg.spotify.com,DIRECT 
+
+# 登录/认证
+DOMAIN-SUFFIX,spotify.com,US
+DOMAIN-SUFFIX,spotify.app.link,US
+DOMAIN-SUFFIX,spoti.fi,US
+DOMAIN-SUFFIX,spotify-com.akamaized.net,US
+DOMAIN-SUFFIX,spotilocal.com,US
+
+#[MITM]
+#hostname = %APPEND% wg.spotify.com
+
+# Spotify 分流---分流多会有美区广告
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/Spotify/Spotify.list,US

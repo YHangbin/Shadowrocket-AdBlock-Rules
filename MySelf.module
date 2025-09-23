@@ -1,0 +1,115 @@
+#!name=MySelf
+#!desc=Description Here
+#!url=https://resume-1258308581.cos.ap-beijing.myqcloud.com/MySelf.module
+
+# US 是分组，需要在规则中设置
+[Proxy Group]
+US = fallback,BWGUS_MEGA,DMIT_US,US66,policy-select-name=DMIT_US,interval=600,timeout=5,url=http://www.gstatic.com/generate_204
+
+[Rule]
+
+# 友盟
+DOMAIN-SUFFIX,umeng.com,REJECT
+DOMAIN-SUFFIX,umengcloud.com,REJECT
+
+# 千问app
+DOMAIN-SUFFIX,qwen.ai,DIRECT
+
+# 小智平台，用谷歌登录
+DOMAIN-SUFFIX,xiaozhi.me,PROXY
+
+# AIstudio
+DOMAIN-SUFFIX,aistudio.google.com,US
+
+# perplexity，不需要校验
+DOMAIN-SUFFIX,perplexity.ai,66JAPAN
+
+# 美柚广告
+DOMAIN-SUFFIX,h-adashx4bc.ut.taobao.com,REJECT
+DOMAIN-SUFFIX,axxd.xmseeyouyima.com,REJECT
+DOMAIN-SUFFIX,ad.seeyouyima.com,REJECT
+DOMAIN-SUFFIX,rdelivery.qq.com,REJECT
+
+
+# 微信广告
+DOMAIN-SUFFIX,wxs.qq.com,REJECT
+DOMAIN-SUFFIX,ap-shanghai.cls.tencentcs.com,REJECT
+
+# 知乎广告
+DOMAIN,appcloud.zhihu.com,REJECT
+DOMAIN,appcloud2.in.zhihu.com,REJECT
+DOMAIN,crash2.zhihu.com,REJECT
+DOMAIN,mqtt.zhihu.com,REJECT
+DOMAIN,sugar.zhihu.com,REJECT
+DOMAIN,et.tanx.com,REJECT
+DOMAIN,qzs.gdtimg.com,REJECT
+DOMAIN,mssdk.volces.com,REJECT
+DOMAIN,qnmob3.doubanio.com,REJECT
+DOMAIN,api.douban.com,REJECT
+DOMAIN,dsp-x.jd.com,REJECT
+DOMAIN,sdk-config.tanx.com,REJECT
+DOMAIN,mazu.m.qq.com,REJECT
+DOMAIN,api-access.pangolin-sdk-toutiao1.com,REJECT
+DOMAIN,sdk.e.qq.com,REJECT
+DOMAIN,ulogs.umeng.com,REJECT
+DOMAIN,mi.gdt.qq.com,REJECT
+DOMAIN,mon.zijieapi.com,REJECT
+# 单独发现的广告，知乎
+DOMAIN-SUFFIX,ulogs.umeng.com,REJECT
+DOMAIN-SUFFIX,ios.bugly.qq.com,REJECT
+DOMAIN-SUFFIX,irc.native-ave2.com,REJECT
+DOMAIN-SUFFIX,open.e.kuaishou.com,REJECT
+DOMAIN-SUFFIX,zhihu-web-analytics.zhihu.com,REJECT
+DOMAIN-SUFFIX,mssdk.volces.com,REJECT
+DOMAIN-SUFFIX,utoken.umeng.com,REJECT
+DOMAIN-SUFFIX,api-access.pangolin-sdk-toutiao-b.com,REJECT
+DOMAIN-SUFFIX,irc.native-ave1.com,REJECT
+DOMAIN-SUFFIX,p2-lm.adukwai.com,REJECT
+DOMAIN-SUFFIX,snowflake.qq.com,REJECT
+DOMAIN-SUFFIX,lf-cdn-tos.bytescm.com,REJECT
+DOMAIN-SUFFIX,log-api.pangolin-sdk-toutiao-b.com,REJECT
+DOMAIN-SUFFIX,ulogs.umengcloud.com,REJECT
+
+# 豆瓣
+DOMAIN-SUFFIX,inappcheck.itunes.apple.com,REJECT
+DOMAIN-SUFFIX,cece.com,REJECT
+DOMAIN-SUFFIX,i.gtimg.cn,REJECT
+DOMAIN-SUFFIX,api.weibo.com,REJECT
+DOMAIN-SUFFIX,errnewlog.umeng.com,REJECT
+DOMAIN-SUFFIX,iphone-ld.apple.com,REJECT
+DOMAIN-SUFFIX,m.douban.com,DIRECT
+DOMAIN-SUFFIX,mktm.jd.com,REJECT
+DOMAIN-SUFFIX,amonsul.douban.com,REJECT
+DOMAIN-SUFFIX,img14.360buyimg.com,REJECT
+DOMAIN-SUFFIX,artery.douban.com,REJECT
+DOMAIN-SUFFIX,wcp.taobao.com,REJECT
+DOMAIN-SUFFIX,unbing.cn,REJECT
+DOMAIN-SUFFIX,adukwai.com,REJECT
+DOMAIN-SUFFIX,baidu-cn-north-00001.bj-a.bcebos.com,REJECT
+DOMAIN-SUFFIX,v2-lm.adukwai.com,REJECT
+DOMAIN-SUFFIX,alibaba-cn-pvg-00001.oss-enet.aliyuncs.com,DIRECT
+DOMAIN-SUFFIX,dypnsapi.aliyuncs.com,REJECT
+DOMAIN-SUFFIX,janapi.jd.com,REJECT
+DOMAIN-SUFFIX,dg.k.jd.com,REJECT
+DOMAIN-SUFFIX,frodo.douban.com,DIRECT
+DOMAIN-SUFFIX,mapi.m.jd.com,REJECT
+DOMAIN-SUFFIX,kepler.jd.com,REJECT
+DOMAIN-SUFFIX,knicks.jd.com,REJECT
+DOMAIN-SUFFIX,xlog.jd.com,REJECT
+DOMAIN-SUFFIX,dgstatic.jd.com,REJECT
+DOMAIN-SUFFIX,push.douban.com,REJECT
+
+
+# 微软 TTS
+DOMAIN-SUFFIX,tts.speech.microsoft.com,DIRECT
+
+# 屏蔽微信读书更新提示，需要配合 MIMT
+URL-REGEX,^https://i\.weread\.qq\.com/feature,REJECT
+URL-REGEX,^https://i\.weread\.qq\.com/mobileSync,REJECT
+
+# ChatGPT 分流
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/OpenAI/OpenAI.list,US
+
+# 去除微信读书开屏更新提示
+[MITM]
+hostname = %APPEND% i.weread.qq.com
