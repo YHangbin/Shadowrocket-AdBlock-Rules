@@ -2,35 +2,36 @@ name: Daily MITM Update
 
 on:
   schedule:
-    - cron: '0 1 * * *'  # 每天 UTC 1 点自动运行
-  workflow_dispatch:      # 支持手动触发
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   update-mitm:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout 当前仓库
     - name: Checkout repo
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0   # 确保可以 push
-        ref: main        # 改成你的默认分支，如果是 master，请改为 master
+        fetch-depth: 0
+        ref: main
 
-    # 2. 下载远程 MITM 文件并检查
     - name: Download MITM file
       run: |
-        FILE_URL="https://whatshub.top/module/adultraplus.module"
-        curl -L -o mitm.module "$FILE_URL"
+        FILE_URL="https://whatshub.top/module/adultraplus.module"  # 修复：去掉末尾空格
+        curl -fL -o mitm.module "$FILE_URL" || { echo "Download failed"; exit 1; }
+        [ -s mitm.module ] || { echo "File is empty"; exit 1; }
         echo "Downloaded file preview (前 20 行):"
         head -n 20 mitm.module
         echo "Total lines:"
         wc -l mitm.module
 
-    # 3. 清理指定 IP
     - name: Clean MITM file
       run: |
-        REMOVE_IPS=("192.168.1.1" "10.0.0.1")  # 在这里添加你要删除的 IP
+        REMOVE_IPS=("192.168.1.1" "10.0.0.1")
         TMP_FILE=$(mktemp)
         while IFS= read -r line; do
           skip=false
@@ -45,12 +46,12 @@ jobs:
           fi
         done < mitm.module
         mv "$TMP_FILE" mitm.module
+        [ -s mitm.module ] || { echo "File is empty after cleaning"; exit 1; }
         echo "After cleaning, total lines:"
         wc -l mitm.module
         echo "Preview of cleaned file (前 20 行):"
         head -n 20 mitm.module
 
-    # 4. 提交更新到当前仓库
     - name: Commit and push
       run: |
         git config user.name "github-actions[bot]"
