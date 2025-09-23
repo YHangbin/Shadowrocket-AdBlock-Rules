@@ -1,10 +1,10 @@
-name: Update Files from Remote URLs
+name: Update Shadowrocket Modules Daily
 
 on:
   schedule:
-    # 每天 UTC 时间 03:00 执行（可自行调整）
-    - cron: '0 3 * * *'
-  # 也可以手动触发
+    # 每天北京时间 03:00（UTC 时间 19:00）
+    - cron: '0 19 * * *'
+  # 支持手动触发更新
   workflow_dispatch:
 
 jobs:
@@ -15,15 +15,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python (optional, for future extensibility)
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: Download Files
+      - name: Download Files to Root Directory
         run: |
-          mkdir -p ./modules  # 可选：创建子目录存放文件
-          
           # 下载第一个文件
           curl -fsSL -o ./sr_reject_list.module \
             "https://raw.githubusercontent.com/GMOogway/shadowrocket-rules/refs/heads/master/sr_reject_list.module"
@@ -32,19 +30,19 @@ jobs:
           curl -fsSL -o ./Module.sgmodule \
             "https://raw.githubusercontent.com/XiangwanGuan/Shadowrocket/refs/heads/main/Release/Module.sgmodule"
 
-      - name: Configure Git
+      - name: Configure Git User
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.name "GitHub Action Bot"
 
       - name: Commit and Push if Changed
         run: |
-          git add .
-          # 检查是否有改动
-          if git status --porcelain | grep -q "modules/"; then
-            git commit -m "🔄 更新模块文件: $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git push
-            echo "✅ 文件已更新并推送"
+          git add sr_reject_list.module Module.sgmodule
+          # 检查是否有变更
+          if ! git diff --cached --quiet; then
+            git commit -m "🔄 自动更新：Shadowrocket 模块文件 $(date +'%Y-%m-%d %H:%M' -u) UTC"
+            git push origin HEAD
+            echo "✅ 文件已更新并推送成功"
           else
-            echo "ℹ️ 无文件变更，跳过提交"
+            echo "ℹ️ 无内容变更，跳过提交"
           fi
