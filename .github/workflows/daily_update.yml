@@ -1,89 +1,101 @@
-name: Download File via Browser (Bypass Cloudflare)
+name: Filter IP Addresses from adultraplus.module
 
 on:
-  schedule:
-    - cron: '0 3 * * *'
-  workflow_dispatch:
-
-permissions:
-  contents: write
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'adultraplus.module'
 
 jobs:
-  download-with-browser:
+  filter-ip:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          node-version: '20'
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Playwright
+      - name: Show original hostname content
         run: |
-          npm init -y
-          npm install -D playwright
-          npx playwright install chromium
+          echo "Original hostname line:"
+          grep -E "hostname\s*=" adultraplus.module || echo "No hostname line found"
+          echo "----------------------------------------"
 
-      - name: Create Download Script
+      - name: Filter IP addresses using Python
         run: |
-          mkdir -p modules
-          cat > download.mjs << 'EOF'
-          import { chromium } from 'playwright';
+          python3 -c "
+# 要过滤的IP地址
+ips_to_remove = ['118.31.125.171', '112.124.203.116', '118.31.123.175']
 
-          (async () => {
-            const browser = await chromium.launch();
-            const context = await browser.newContext({
-              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-            });
-            const page = await context.newPage();
+print('IPs to remove:', ips_to_remove)
 
-            console.log('🌐 Going to URL...');
-            await page.goto('https://whatshub.top/module/adultraplus.module', {
-              waitUntil: 'networkidle',
-              timeout: 60000
-            });
+# 读取文件
+with open('adultraplus.module', 'r') as f:
+    lines = f.readlines()
 
-            // 等待几秒确保 Cloudflare 验证完成
-            await page.waitForTimeout(8000);
+# 处理每一行
+new_lines = []
+for line in lines:
+    if 'hostname = ' in line and '%APPEND%' in line:
+        print(f'Processing line: {line.strip()}')
+        
+        # 分离前缀和主机名列表
+        if 'hostname = %APPEND%' in line:
+            prefix = 'hostname = %APPEND% '
+            hostname_part = line.replace('hostname = %APPEND% ', '').strip()
+        else:
+            # 处理其他可能的格式
+            parts = line.split('=', 1)
+            prefix = parts[0] + '= '
+            hostname_part = parts[1].strip()
+        
+        # 分割主机名
+        hosts = hostname_part.split(',')
+        
+        print(f'Total hosts before filtering: {len(hosts)}')
+        
+        # 过滤掉指定的IP
+        filtered_hosts = [host for host in hosts if host.strip() not in ips_to_remove]
+        
+        print(f'Total hosts after filtering: {len(filtered_hosts)}')
+        print(f'Removed {len(hosts) - len(filtered_hosts)} hosts')
+        
+        # 重新组合
+        new_hostname_part = ','.join(filtered_hosts)
+        
+        # 重建行
+        new_line = prefix + new_hostname_part + '\n'
+        new_lines.append(new_line)
+        
+        print(f'New line: {new_line.strip()}')
+    else:
+        new_lines.append(line)
 
-            // 获取页面内容（如果是文件，会直接显示文本）
-            const content = await page.content();
+# 写回文件
+with open('adultraplus.module', 'w') as f:
+    f.writelines(new_lines)
+"
 
-            // 判断是否仍是验证页面
-            if (content.includes('<title>Just a moment...</title>')) {
-              console.error('❌ Still on Cloudflare challenge page. Aborting.');
-              process.exit(1);
-            }
-
-            // 获取 body 纯文本（假设文件是文本格式）
-            const bodyText = await page.evaluate(() => document.body.innerText);
-
-            // 保存到文件
-            require('fs').writeFileSync('modules/adultraplus.module', bodyText);
-
-            await browser.close();
-            console.log('✅ File downloaded successfully.');
-          })();
-          EOF
-
-      - name: Run Download Script
-        run: node download.mjs
-        continue-on-error: true  # 即使失败也继续，避免中断后续步骤
-
-      - name: Set Git Identity
+      - name: Show filtered result
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          echo "Filtered hostname line:"
+          grep -E "hostname\s*=" adultraplus.module || echo "No hostname line found"
+          echo "----------------------------------------"
 
-      - name: Commit and Push if Changed
+      - name: Check for changes
+        id: changes
         run: |
-          git add modules/adultraplus.module
-          if git status --porcelain | grep -q "modules/adultraplus.module"; then
-            git commit -m "chore: update adultraplus.module via browser"
-            git push
-            echo "✅ Pushed updated file."
+          git add adultraplus.module
+          if git diff --cached --quiet; then
+            echo "no_changes=true" >> $GITHUB_OUTPUT
           else
-            echo "ℹ️ No changes detected."
+            echo "no_changes=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Commit and push changes
+        if: steps.changes.outputs.no_changes == 'false'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Auto-filter: Remove specified IP addresses (118.31.125.171, 112.124.203.116, 118.31.123.175) from hostname in adultraplus.module"
+          git push
