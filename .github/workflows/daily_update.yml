@@ -3,7 +3,7 @@ name: Daily MITM Update
 on:
   schedule:
     - cron: '0 1 * * *'  # 每天 UTC 1 点自动运行
-  workflow_dispatch:      # 手动触发
+  workflow_dispatch:      # 支持手动触发
 
 jobs:
   update-mitm:
@@ -19,11 +19,13 @@ jobs:
       run: |
         FILE_URL="https://whatshub.top/module/adultraplus.module"
         curl -o mitm.module $FILE_URL
+        echo "Downloaded MITM file, total lines:"
+        wc -l mitm.module
 
     # 3. 清理指定 IP
     - name: Clean MITM file
       run: |
-        REMOVE_IPS=("192.168.1.1" "10.0.0.1")  # 需要删除的 IP
+        REMOVE_IPS=("192.168.1.1" "10.0.0.1")  # 在这里添加你要删除的 IP
         TMP_FILE=$(mktemp)
         while read -r line; do
           skip=false
@@ -38,12 +40,14 @@ jobs:
           fi
         done < mitm.module
         mv "$TMP_FILE" mitm.module
+        echo "After cleaning, total lines:"
+        wc -l mitm.module
 
-    # 4. 提交更新
+    # 4. 提交更新到当前仓库
     - name: Commit and push
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add mitm.module
-        git commit -m "Daily MITM update"
+        git commit -m "Daily MITM update" || echo "No changes to commit"
         git push
