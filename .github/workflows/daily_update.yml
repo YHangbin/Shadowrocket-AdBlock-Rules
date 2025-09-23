@@ -24,57 +24,57 @@ jobs:
       - name: Filter IP addresses using Python
         run: |
           python3 -c "
-# 要过滤的IP地址
-ips_to_remove = ['118.31.125.171', '112.124.203.116', '118.31.123.175']
-
-print('IPs to remove:', ips_to_remove)
-
-# 读取文件
-with open('adultraplus.module', 'r') as f:
-    lines = f.readlines()
-
-# 处理每一行
-new_lines = []
-for line in lines:
-    if 'hostname = ' in line and '%APPEND%' in line:
-        print(f'Processing line: {line.strip()}')
-        
-        # 分离前缀和主机名列表
-        if 'hostname = %APPEND%' in line:
-            prefix = 'hostname = %APPEND% '
-            hostname_part = line.replace('hostname = %APPEND% ', '').strip()
-        else:
-            # 处理其他可能的格式
-            parts = line.split('=', 1)
-            prefix = parts[0] + '= '
-            hostname_part = parts[1].strip()
-        
-        # 分割主机名
-        hosts = hostname_part.split(',')
-        
-        print(f'Total hosts before filtering: {len(hosts)}')
-        
-        # 过滤掉指定的IP
-        filtered_hosts = [host for host in hosts if host.strip() not in ips_to_remove]
-        
-        print(f'Total hosts after filtering: {len(filtered_hosts)}')
-        print(f'Removed {len(hosts) - len(filtered_hosts)} hosts')
-        
-        # 重新组合
-        new_hostname_part = ','.join(filtered_hosts)
-        
-        # 重建行
-        new_line = prefix + new_hostname_part + '\n'
-        new_lines.append(new_line)
-        
-        print(f'New line: {new_line.strip()}')
-    else:
-        new_lines.append(line)
-
-# 写回文件
-with open('adultraplus.module', 'w') as f:
-    f.writelines(new_lines)
-"
+          # 要过滤的IP地址
+          ips_to_remove = ['118.31.125.171', '112.124.203.116', '118.31.123.175']
+          
+          print('IPs to remove:', ips_to_remove)
+          
+          # 读取文件
+          with open('adultraplus.module', 'r') as f:
+              lines = f.readlines()
+          
+          # 处理每一行
+          new_lines = []
+          for line in lines:
+              if 'hostname = ' in line and '%APPEND%' in line:
+                  print(f'Processing line: {line.strip()}')
+                  
+                  # 分离前缀和主机名列表
+                  if 'hostname = %APPEND%' in line:
+                      prefix = 'hostname = %APPEND% '
+                      hostname_part = line.replace('hostname = %APPEND% ', '').strip()
+                  else:
+                      # 处理其他可能的格式
+                      parts = line.split('=', 1)
+                      prefix = parts[0] + '= '
+                      hostname_part = parts[1].strip()
+                  
+                  # 分割主机名
+                  hosts = hostname_part.split(',')
+                  
+                  print(f'Total hosts before filtering: {len(hosts)}')
+                  
+                  # 过滤掉指定的IP
+                  filtered_hosts = [host for host in hosts if host.strip() not in ips_to_remove]
+                  
+                  print(f'Total hosts after filtering: {len(filtered_hosts)}')
+                  print(f'Removed {len(hosts) - len(filtered_hosts)} hosts')
+                  
+                  # 重新组合
+                  new_hostname_part = ','.join(filtered_hosts)
+                  
+                  # 重建行
+                  new_line = prefix + new_hostname_part + '\n'
+                  new_lines.append(new_line)
+                  
+                  print(f'New line: {new_line.strip()}')
+              else:
+                  new_lines.append(line)
+          
+          # 写回文件
+          with open('adultraplus.module', 'w') as f:
+              f.writelines(new_lines)
+          "
 
       - name: Show filtered result
         run: |
