@@ -1,0 +1,50 @@
+name: Update Files from Remote URLs
+
+on:
+  schedule:
+    # 每天 UTC 时间 03:00 执行（可自行调整）
+    - cron: '0 3 * * *'
+  # 也可以手动触发
+  workflow_dispatch:
+
+jobs:
+  update-files:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Download Files
+        run: |
+          mkdir -p ./modules  # 可选：创建子目录存放文件
+          
+          # 下载第一个文件
+          curl -fsSL -o ./modules/sr_reject_list.module \
+            "https://raw.githubusercontent.com/GMOogway/shadowrocket-rules/refs/heads/master/sr_reject_list.module"
+          
+          # 下载第二个文件
+          curl -fsSL -o ./modules/Module.sgmodule \
+            "https://raw.githubusercontent.com/XiangwanGuan/Shadowrocket/refs/heads/main/Release/Module.sgmodule"
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Commit and Push if Changed
+        run: |
+          git add .
+          # 检查是否有改动
+          if git status --porcelain | grep -q "modules/"; then
+            git commit -m "🔄 更新模块文件: $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+            echo "✅ 文件已更新并推送"
+          else
+            echo "ℹ️ 无文件变更，跳过提交"
+          fi
