@@ -16,19 +16,29 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Show original hostname content
+      - name: Show original content
         run: |
-          echo "Original hostname line:"
-          grep -E "hostname\s*=" adultraplus.module || echo "No hostname line found"
+          echo "Original file content:"
+          head -10 adultraplus.module
+          echo "..."
           echo "----------------------------------------"
 
-      - name: Filter IP addresses using Python
+      - name: Filter IP addresses and update description
         run: |
           python3 -c "
+          import datetime
+          
           # 要过滤的IP地址
           ips_to_remove = ['118.31.125.171', '112.124.203.116', '118.31.123.175']
           
           print('IPs to remove:', ips_to_remove)
+          
+          # 获取当前日期
+          current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+          new_desc = f'#!desc= {current_date}+剔除引发小宇宙报错的MITM中2个IP 地址'
+          new_name = '#!name= 「BugFix」APP启动页去广告ultra+'
+          
+          print(f'New description: {new_desc}')
           
           # 读取文件
           with open('adultraplus.module', 'r') as f:
@@ -37,15 +47,23 @@ jobs:
           # 处理每一行
           new_lines = []
           for line in lines:
-              if 'hostname = ' in line and '%APPEND%' in line:
-                  print(f'Processing line: {line.strip()}')
+              # 更新描述行
+              if line.startswith('#!desc='):
+                  print(f'Old description: {line.strip()}')
+                  new_lines.append(new_desc + '\n')
+              # 更新名称行
+              elif line.startswith('#!name='):
+                  print(f'Old name: {line.strip()}')
+                  new_lines.append(new_name + '\n')
+              # 处理 hostname 行
+              elif 'hostname = ' in line and '%APPEND%' in line:
+                  print(f'Processing hostname line: {line.strip()}')
                   
                   # 分离前缀和主机名列表
                   if 'hostname = %APPEND%' in line:
                       prefix = 'hostname = %APPEND% '
                       hostname_part = line.replace('hostname = %APPEND% ', '').strip()
                   else:
-                      # 处理其他可能的格式
                       parts = line.split('=', 1)
                       prefix = parts[0] + '= '
                       hostname_part = parts[1].strip()
@@ -68,7 +86,7 @@ jobs:
                   new_line = prefix + new_hostname_part + '\n'
                   new_lines.append(new_line)
                   
-                  print(f'New line: {new_line.strip()}')
+                  print(f'New hostname line: {new_line.strip()}')
               else:
                   new_lines.append(line)
           
@@ -79,8 +97,9 @@ jobs:
 
       - name: Show filtered result
         run: |
-          echo "Filtered hostname line:"
-          grep -E "hostname\s*=" adultraplus.module || echo "No hostname line found"
+          echo "Updated file content:"
+          head -10 adultraplus.module
+          echo "..."
           echo "----------------------------------------"
 
       - name: Check for changes
@@ -98,7 +117,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git commit -m "Auto-filter: Remove specified IP addresses (118.31.125.171, 112.124.203.116, 118.31.123.175) from hostname in adultraplus.module"
+          git commit -m "Auto-filter: Update description and remove specified IP addresses (118.31.125.171, 112.124.203.116, 118.31.123.175) from hostname in adultraplus.module"
           git push
 
       - name: No changes detected
