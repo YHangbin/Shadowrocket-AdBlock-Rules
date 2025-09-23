@@ -1,23 +1,78 @@
-name: Download and Commit File
+name: Download File via Browser (Bypass Cloudflare)
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 每天 UTC 时间 3:00 执行（可按需调整）
-  workflow_dispatch:     # 允许手动触发
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  download-and-commit:
+  download-with-browser:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download File
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install -D playwright
+          npx playwright install chromium
+
+      - name: Create Download Script
         run: |
           mkdir -p modules
-          curl -L "https://whatshub.top/module/adultraplus.module" -o modules/adultraplus.module
+          cat > download.mjs << 'EOF'
+          import { chromium } from 'playwright';
 
-      - name: Set up Git
+          (async () => {
+            const browser = await chromium.launch();
+            const context = await browser.newContext({
+              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            });
+            const page = await context.newPage();
+
+            console.log('🌐 Going to URL...');
+            await page.goto('https://whatshub.top/module/adultraplus.module', {
+              waitUntil: 'networkidle',
+              timeout: 60000
+            });
+
+            // 等待几秒确保 Cloudflare 验证完成
+            await page.waitForTimeout(8000);
+
+            // 获取页面内容（如果是文件，会直接显示文本）
+            const content = await page.content();
+
+            // 判断是否仍是验证页面
+            if (content.includes('<title>Just a moment...</title>')) {
+              console.error('❌ Still on Cloudflare challenge page. Aborting.');
+              process.exit(1);
+            }
+
+            // 获取 body 纯文本（假设文件是文本格式）
+            const bodyText = await page.evaluate(() => document.body.innerText);
+
+            // 保存到文件
+            require('fs').writeFileSync('modules/adultraplus.module', bodyText);
+
+            await browser.close();
+            console.log('✅ File downloaded successfully.');
+          })();
+          EOF
+
+      - name: Run Download Script
+        run: node download.mjs
+        continue-on-error: true  # 即使失败也继续，避免中断后续步骤
+
+      - name: Set Git Identity
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -25,11 +80,10 @@ jobs:
       - name: Commit and Push if Changed
         run: |
           git add modules/adultraplus.module
-          git status
           if git status --porcelain | grep -q "modules/adultraplus.module"; then
-            git commit -m "chore: update adultraplus.module"
+            git commit -m "chore: update adultraplus.module via browser"
             git push
-            echo "✅ File updated and pushed."
+            echo "✅ Pushed updated file."
           else
-            echo "ℹ️ No changes detected. Skipping commit."
+            echo "ℹ️ No changes detected."
           fi
