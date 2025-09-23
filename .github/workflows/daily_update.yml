@@ -1,0 +1,48 @@
+name: Daily MITM Update
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # 每天 UTC 1 点
+
+jobs:
+  update-mitm:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Checkout 仓库
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    # 2. 下载远程 MITM 文件
+    - name: Download MITM file
+      run: |
+        FILE_URL="https://whatshub.top/module/adultraplus.module"
+        curl -o mitm.module $FILE_URL
+
+    # 3. 清理指定 IP
+    - name: Clean MITM file
+      run: |
+        REMOVE_IPS=("192.168.1.1" "10.0.0.1")  # 需要删除的 IP
+        TMP_FILE=$(mktemp)
+        while read -r line; do
+          skip=false
+          for ip in "${REMOVE_IPS[@]}"; do
+            if [[ "$line" == *"$ip"* ]]; then
+              skip=true
+              break
+            fi
+          done
+          if [ "$skip" = false ]; then
+            echo "$line" >> "$TMP_FILE"
+          fi
+        done < mitm.module
+        mv "$TMP_FILE" mitm.module
+
+    # 4. 提交更新
+    - name: Commit and push
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add mitm.module
+        git commit -m "Daily MITM update"
+        git push
