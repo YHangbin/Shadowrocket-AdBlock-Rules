@@ -25,11 +25,11 @@ jobs:
           mkdir -p ./modules  # 可选：创建子目录存放文件
           
           # 下载第一个文件
-          curl -fsSL -o ./modules/sr_reject_list.module \
+          curl -fsSL -o ./sr_reject_list.module \
             "https://raw.githubusercontent.com/GMOogway/shadowrocket-rules/refs/heads/master/sr_reject_list.module"
           
           # 下载第二个文件
-          curl -fsSL -o ./modules/Module.sgmodule \
+          curl -fsSL -o ./Module.sgmodule \
             "https://raw.githubusercontent.com/XiangwanGuan/Shadowrocket/refs/heads/main/Release/Module.sgmodule"
 
       - name: Configure Git
