@@ -1,0 +1,11 @@
+#!name=Test
+#!desc=专门做测试用
+
+# 彩云天气真正有效的是这个，可以去掉下方助手
+[Script]
+caiyun_json=type=http-response,pattern=^https?:\/\/wrapper\.cyapi\.cn\/v\d\/activity,requires-body=1,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/caiyun_json.js
+
+
+
+[MITM]
+hostname = %APPEND% *.cyapi.cn
