@@ -1,4 +1,4 @@
-name: Filter IP Addresses from adultraplus.module
+name: Filter from adultraplus.module
 
 on:
   push:
@@ -35,8 +35,8 @@ jobs:
           
           # 获取当前日期
           current_date = datetime.datetime.now().strftime('%Y-%m-%d')
-          new_desc = f'#!desc= {current_date}+剔除引发小宇宙报错的MITM中2个IP 地址'
-          new_name = '#!name= 「BugFix」APP启动页去广告ultra+'
+          new_desc = f'#!desc={current_date}+剔除引发小宇宙报错的MITM中2个IP 地址'
+          new_name = '#!name=「BugFix」APP启动页去广告ultra+'
           
           print(f'New description: {new_desc}')
           
