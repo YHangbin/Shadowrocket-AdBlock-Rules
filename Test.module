@@ -5,31 +5,17 @@
 [Script]
 caiyun_json=type=http-response,pattern=^https?:\/\/wrapper\.cyapi\.cn\/v\d\/activity,requires-body=1,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/caiyun_json.js
 
-# Tracks 响应脚本（修改 /v1/tracks 接口响应）
-DualSubs.Spotify.Tracks.response = type=http-response,script-path=https://github.com/DualSubs/Spotify/releases/download/v1.9.9/response.bundle.js,pattern=^https?:\/\/api\.spotify\.com\/v1\/tracks\?,max-size=0,requires-body=true,timeout=30,script-update-interval=0,enable=true
-
-# Lyrics 请求脚本（请求体修改，用于获取歌词）
-DualSubs.Spotify.Lyrics.request = type=http-request,script-path=https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js,pattern=^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*),max-size=0,requires-body=true,timeout=30,script-update-interval=0,enable=true
-
-# Translate.lrc 响应脚本（翻译歌词子类型）
-DualSubs.Spotify.Translate.Lyrics.response = type=http-response,script-path=https://github.com/DualSubs/Universal/releases/latest/download/Translate.response.bundle.js,pattern=^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)subtype=Translate,max-size=0,requires-body=true,timeout=30,script-update-interval=0,enable=true
-
-# External Lyrics 响应脚本（外部来源歌词子类型）
-DualSubs.Spotify.External.Lyrics.response = type=http-response,script-path=https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js,pattern=^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)subtype=External,max-size=0,requires-body=true,timeout=30,script-update-interval=0,enable=true
-
-[URL Rewrite]
-# 对应的重写规则（Shadowrocket 使用 URL Rewrite 段来放 Surge/QuanX 的 rewrite 规则）
 # 🍿️ DualSubs.Spotify.Tracks.response
-^https?:\/\/api\.spotify\.com\/v1\/tracks\? url script-response-body https://github.com/DualSubs/Spotify/releases/download/v1.9.9/response.bundle.js
+spotify_tracks=type=http-response,pattern=^https?:\/\/api\.spotify\.com\/v1\/tracks\?,requires-body=1,script-path=https://github.com/DualSubs/Spotify/releases/download/v1.9.9/response.bundle.js
 
 # 🍿️ DualSubs.Spotify.Lyrics.request
-^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*) url script-request-body https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
+spotify_lyrics=type=http-request,pattern=^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*),requires-body=1,script-path=https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
 
 # 🍿️ DualSubs.Spotify.Translate.Lyrics.response
-^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)subtype=Translate url script-response-body https://github.com/DualSubs/Universal/releases/latest/download/Translate.response.bundle.js
+spotify_translate_lyrics=type=http-response,pattern=^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)subtype=Translate,requires-body=1,script-path=https://github.com/DualSubs/Universal/releases/latest/download/Translate.response.bundle.js
 
 # 🍿️ DualSubs.Spotify.External.Lyrics.response
-^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)subtype=External url script-response-body https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js
+spotify_external_lyrics=type=http-response,pattern=^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)subtype=External,requires-body=1,script-path=https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js
 
 
 [MITM]
