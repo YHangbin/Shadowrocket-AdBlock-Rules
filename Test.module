@@ -5,18 +5,6 @@
 [Script]
 caiyun_json=type=http-response,pattern=^https?:\/\/wrapper\.cyapi\.cn\/v\d\/activity,requires-body=1,script-path=https://raw.githubusercontent.com/ddgksf2013/Scripts/refs/heads/master/caiyun_json.js
 
-# 🍿️ DualSubs.Spotify.Tracks.response
-spotify_tracks=type=http-response,pattern=^https?:\/\/api\.spotify\.com\/v1\/tracks\?,requires-body=1,script-path=https://github.com/DualSubs/Spotify/releases/download/v1.9.9/response.bundle.js
-
-# 🍿️ DualSubs.Spotify.Lyrics.request
-spotify_lyrics=type=http-request,pattern=^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*),requires-body=1,script-path=https://github.com/DualSubs/Spotify/releases/download/v1.9.9/request.bundle.js
-
-# 🍿️ DualSubs.Spotify.Translate.Lyrics.response
-spotify_translate_lyrics=type=http-response,pattern=^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)subtype=Translate,requires-body=1,script-path=https://github.com/DualSubs/Universal/releases/latest/download/Translate.response.bundle.js
-
-# 🍿️ DualSubs.Spotify.External.Lyrics.response
-spotify_external_lyrics=type=http-response,pattern=^https?:\/\/spclient\.wg\.spotify\.com\/color-lyrics\/v2\/track\/(.+)\?(.*)subtype=External,requires-body=1,script-path=https://github.com/DualSubs/Universal/releases/latest/download/External.Lyrics.response.bundle.js
-
 
 [MITM]
-hostname = %APPEND% *.cyapi.cn,api.spotify.com,spclient.wg.spotify.com
+hostname = %APPEND% *.cyapi.cn
