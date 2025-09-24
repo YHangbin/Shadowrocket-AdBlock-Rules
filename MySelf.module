@@ -104,8 +104,8 @@ DOMAIN-SUFFIX,push.douban.com,REJECT
 DOMAIN-SUFFIX,tts.speech.microsoft.com,DIRECT
 
 # 屏蔽微信读书更新提示，需要配合 MIMT
-URL-REGEX,^https://i\.weread\.qq\.com/feature,REJECT
-URL-REGEX,^https://i\.weread\.qq\.com/mobileSync,REJECT
+URL-REGEX,^https://i\.weread\.qq\.com/feature,REJECT-200
+URL-REGEX,^https://i\.weread\.qq\.com/mobileSync,REJECT-200
 
 # ChatGPT 分流
 RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/OpenAI/OpenAI.list,US
