@@ -7,6 +7,8 @@
 US = fallback,BWGUS_MEGA,DMIT_US,US66,policy-select-name=DMIT_US,interval=600,timeout=5,url=http://www.gstatic.com/generate_204
 
 [Rule]
+# 汽水音乐开屏广告
+DOMAIN-SUFFIX,ads5-normal-hl.zijieapi.com,REJECT
 
 # 友盟
 DOMAIN-SUFFIX,umeng.com,REJECT
