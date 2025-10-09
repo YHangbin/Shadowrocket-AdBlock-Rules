@@ -9,6 +9,7 @@ US = fallback,BWGUS_MEGA,DMIT_US,US66,policy-select-name=DMIT_US,interval=600,ti
 [Rule]
 # 高德地图
 DOMAIN-SUFFIX,amap.com,DIRECT
+
 # Google voice
 DOMAIN-SUFFIX,googleapis.com,US
 
