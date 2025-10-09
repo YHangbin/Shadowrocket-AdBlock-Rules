@@ -1,5 +1,5 @@
 #!name=Spotify
-#!desc=Description Here
+#!desc=Spotify 专门维护的规则
 
 # US 是分组，需要在规则中设置
 [Proxy Group]
