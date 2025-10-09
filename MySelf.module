@@ -1,6 +1,6 @@
 #!name=MySelf
 #!desc=Description Here
-#!url=https://resume-1258308581.cos.ap-beijing.myqcloud.com/MySelf.module
+
 
 # US 是分组，需要在规则中设置
 [Proxy Group]
