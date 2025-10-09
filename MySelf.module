@@ -1,10 +1,11 @@
 #!name=MySelf
-#!desc=自己维护的一些规则
+#!desc=使用过程中一些规则汇总
 
 
 # US 是分组，需要在规则中设置
 [Proxy Group]
 US = fallback,BWGUS_MEGA,DMIT_US,US66,policy-select-name=DMIT_US,interval=600,timeout=5,url=http://www.gstatic.com/generate_204
+JP = fallback,BWG-JP,66JAPAN,policy-select-name=BWG-JP,interval=600,timeout=5,url=http://www.gstatic.com/generate_204
 
 [Rule]
 # 高德地图
