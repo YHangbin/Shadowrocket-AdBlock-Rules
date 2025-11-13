@@ -1,18 +1,30 @@
 #!name=MySelf
 #!desc=使用过程中一些规则汇总
-
-
-# US 是分组，需要在规则中设置
-[Proxy Group]
-US = fallback,BWGUS_MEGA,DMIT_US,US66,policy-select-name=DMIT_US,interval=600,timeout=5,url=http://www.gstatic.com/generate_204
-JP = fallback,BWG-JP,66JAPAN,policy-select-name=BWG-JP,interval=600,timeout=5,url=http://www.gstatic.com/generate_204
+# US 和JP 是分组，仅需要定义一次，后边分组的定义会覆盖前边的定义
 
 [Rule]
+
+# 微软 TTS
+DOMAIN-SUFFIX,tts.speech.microsoft.com,DIRECT
+
 # 高德地图
 DOMAIN-SUFFIX,amap.com,DIRECT
 
 # Google voice
 DOMAIN-SUFFIX,googleapis.com,US
+
+# 千问app
+DOMAIN-SUFFIX,qwen.ai,DIRECT
+
+# 小智平台，用谷歌登录
+DOMAIN-SUFFIX,xiaozhi.me,PROXY
+
+# AIstudio US 地区可用
+DOMAIN-SUFFIX,aistudio.google.com,US
+
+# perplexity，JP 地区可用
+DOMAIN-SUFFIX,perplexity.ai,JP
+
 
 # 汽水音乐开屏广告
 DOMAIN-SUFFIX,ads5-normal-hl.zijieapi.com,REJECT
@@ -21,17 +33,10 @@ DOMAIN-SUFFIX,ads5-normal-hl.zijieapi.com,REJECT
 DOMAIN-SUFFIX,umeng.com,REJECT
 DOMAIN-SUFFIX,umengcloud.com,REJECT
 
-# 千问app
-DOMAIN-SUFFIX,qwen.ai,DIRECT
-
-# 小智平台，用谷歌登录
-DOMAIN-SUFFIX,xiaozhi.me,PROXY
-
-# AIstudio
-DOMAIN-SUFFIX,aistudio.google.com,US
-
-# perplexity，不需要校验
-DOMAIN-SUFFIX,perplexity.ai,66JAPAN
+# 视频软件的广告
+DOMAIN-SUFFIX,bgg.baidu.com,REJECT
+DOMAIN-SUFFIX,gifshow.com,REJECT
+DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
 
 # 美柚广告
 DOMAIN-SUFFIX,h-adashx4bc.ut.taobao.com,REJECT
@@ -107,10 +112,6 @@ DOMAIN-SUFFIX,knicks.jd.com,REJECT
 DOMAIN-SUFFIX,xlog.jd.com,REJECT
 DOMAIN-SUFFIX,dgstatic.jd.com,REJECT
 DOMAIN-SUFFIX,push.douban.com,REJECT
-
-
-# 微软 TTS
-DOMAIN-SUFFIX,tts.speech.microsoft.com,DIRECT
 
 # 屏蔽微信读书更新提示，需要配合 MIMT
 URL-REGEX,^https://i\.weread\.qq\.com/feature,REJECT-200
