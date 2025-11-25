@@ -1,5 +1,5 @@
 #!name=融合模块
-#!desc=2025-11-24 10:44:52
+#!desc=2025-11-25 08:54:39
 #!arguments=YouTube ·屏蔽上传按钮:true, YouTube ·屏蔽选段按钮:true, YouTube ·屏蔽短片按钮:true, YouTube ·字幕翻译语言:zh-Hans, YouTube ·歌词翻译语言:zh-Hans
 #!arguments-desc=\n 参数说明：\n YouTube翻译语言：默认简中，填入off关闭；\n 
 
@@ -2372,7 +2372,7 @@ http-response-jq ^https?:\/\/bbs-api(-ab)?\.miyoushe\.com\/apihub\/api\/getAppCo
 http-response-jq ^https?:\/\/bbs-api(-ab)?\.miyoushe\.com\/apihub\/api\/getAppConfig$ '.data.config.teenager_popup_freq_type = 0'
 http-response-jq ^https?:\/\/bbs-api(-ab)?\.miyoushe\.com\/apihub\/api\/getAppStartupData$ '.data.resp_map["/apihub/api/getAppConfig"].data.get_app_config_response.config.is_show_teenager_mode_btn = 0'
 http-response-jq ^https?:\/\/bbs-api(-ab)?\.miyoushe\.com\/apihub\/api\/getAppStartupData$ '.data.resp_map["/apihub/api/getAppConfig"].data.get_app_config_response.config.teenager_popup_freq_type = 0'
-http-response-jq ^https?:\/\/bbs-api(-ab)?\.miyoushe\.com\/apihub\/api\/getAppStartupData$ 'delpaths([["data","resp_map","/teenager/api/info"]])'
+http-response-jq ^https?:\/\/bbs-api(-ab)?\.miyoushe\.com\/apihub\/api\/getAppStartupData$ 'del(.data.resp_map["/teenager/api/info"])'
 http-response-jq ^https?:\/\/bbs-api-ab\.miyoushe\.com\/teenager\/api\/info$ '.data.is_enabled = false'
 http-response-jq ^https?:\/\/bbs-api-ab\.miyoushe\.com\/teenager\/api\/info$ '.data.is_force = false'
 http-response-jq ^https?:\/\/bbs-api-ab\.miyoushe\.com\/teenager\/api\/info$ '.data.is_teenager = false'
