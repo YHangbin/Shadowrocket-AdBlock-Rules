@@ -113,7 +113,7 @@ DOMAIN-SUFFIX,xlog.jd.com,REJECT
 DOMAIN-SUFFIX,dgstatic.jd.com,REJECT
 DOMAIN-SUFFIX,push.douban.com,REJECT
 
-# ========= 网易云音乐广告与非必要功能屏蔽 (究极版) =========
+# ========= 网易云音乐广告与非必要功能屏蔽 (精准修正版) =========
 
 # 核心广告接口屏蔽
 URL-REGEX,^https?://interface3\.music\.163\.com/eapi/ad/.*,REJECT
@@ -130,20 +130,16 @@ URL-REGEX,^https?://interface3\.music\.163\.com/eapi/middle/clientcfg/config/v2/
 # 信息流、横幅、场景广告屏蔽
 URL-REGEX,^https?://interface3\.music\.163\.com/eapi/rtrs/.*,REJECT
 URL-REGEX,^https?://interface3\.music\.163\.com/eapi/link/page/rcmd/.*,REJECT
-# (新发现)
 URL-REGEX,^https?://interface3\.music\.163\.com/eapi/link/scene/show/resource,REJECT
 
 # 开屏与视频广告素材CDN屏蔽 (多来源)
-# (新发现) 视频广告
 DOMAIN,iadmusicmatvideo.music.126.net,REJECT
-# (新发现) 电商广告
-DOMAIN-SUFFIX,360buyimg.com,REJECT
-DOMAIN-SUFFIX,alibabausercontent.com,REJECT
-# (旧来源)
 DOMAIN,iadmat.nosdn.127.net,REJECT
 DOMAIN,iadmatapk.nosdn.127.net,REJECT
 DOMAIN,iadmusicmat.music.126.net,REJECT
 DOMAIN,ossgw.alicdn.com,REJECT
+DOMAIN-SUFFIX,360buyimg.com,REJECT
+DOMAIN-SUFFIX,alibabausercontent.com,REJECT
 DOMAIN-SUFFIX,miaozhen.com,REJECT
 
 # P2P加速与第三方SDK屏蔽
@@ -152,13 +148,16 @@ DOMAIN-SUFFIX,xinqiucc.com,REJECT
 DOMAIN-SUFFIX,kuiniuca.com,REJECT
 DOMAIN-SUFFIX,tianwenca.com,REJECT
 
+# (重点) 屏蔽内嵌的腾讯系广告SDK
+DOMAIN-SUFFIX,video.qq.com,REJECT
+DOMAIN-SUFFIX,qpic.cn,REJECT
+
 # 日志、追踪与性能监控屏蔽
 DOMAIN,clientlog3.music.163.com,REJECT
 DOMAIN,clientlogsf.music.163.com,REJECT
 DOMAIN,clientlogdep.music.163.com,REJECT
 DOMAIN,netapm.music.163.com,REJECT
 DOMAIN,udataresys-log.nie.netease.com,REJECT
-# (新发现) 阿里云视频日志
 DOMAIN,videocloud.cn-hangzhou.log.aliyuncs.com,REJECT
 # (第三方追踪)
 DOMAIN-SUFFIX,zhuanzfx.com,REJECT
