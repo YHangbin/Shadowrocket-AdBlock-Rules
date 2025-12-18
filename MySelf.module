@@ -113,6 +113,55 @@ DOMAIN-SUFFIX,xlog.jd.com,REJECT
 DOMAIN-SUFFIX,dgstatic.jd.com,REJECT
 DOMAIN-SUFFIX,push.douban.com,REJECT
 
+# ========= 网易云音乐广告与非必要功能屏蔽 (终极版) =========
+
+# 核心广告接口屏蔽
+URL-REGEX,^https?://interface3\.music\.163\.com/eapi/ad/.*,REJECT
+URL-REGEX,^https?://interface3\.music\.163\.com/eapi/delivery/.*,REJECT
+# (新发现) 动态广告插入接口
+URL-REGEX,^https?://interface3\.music\.163\.com/eapi/dai/.*,REJECT
+URL-REGEX,^https?://interface3\.music\.163\.com/eapi/aio/.*,REJECT
+
+# 应用内弹窗、浮窗、推广位屏蔽
+URL-REGEX,^https?://interface3\.music\.163\.com/eapi/resource-exposure/pop-up/.*,REJECT
+URL-REGEX,^https?://interface3\.music\.163\.com/eapi/event/floating/layer.*,REJECT
+URL-REGEX,^https?://interface3\.music\.163\.com/eapi/link/position/show/resource.*,REJECT
+URL-REGEX,^https?://interface3\.music\.163\.com/eapi/middle/clientcfg/config/v2/full/delivery,REJECT
+
+# 开屏广告素材与追踪屏蔽 (多来源)
+# (新发现) 网易CDN广告素材
+DOMAIN,iadmat.nosdn.127.net,REJECT
+DOMAIN,iadmatapk.nosdn.127.net,REJECT
+# (旧来源)
+DOMAIN,iadmusicmat.music.126.net,REJECT
+DOMAIN,ossgw.alicdn.com,REJECT
+DOMAIN-SUFFIX,miaozhen.com,REJECT
+
+# P2P加速与第三方SDK屏蔽
+DOMAIN-SUFFIX,qiezibenpao.com,REJECT
+DOMAIN-SUFFIX,xinqiucc.com,REJECT
+DOMAIN-SUFFIX,kuiniuca.com,REJECT
+# (新发现)
+DOMAIN-SUFFIX,tianwenca.com,REJECT
+
+# 日志、追踪与性能监控屏蔽
+DOMAIN,clientlog3.music.163.com,REJECT
+DOMAIN,clientlogsf.music.163.com,REJECT
+DOMAIN,clientlogdep.music.163.com,REJECT
+DOMAIN,netapm.music.163.com,REJECT
+# (新发现)
+DOMAIN,udataresys-log.nie.netease.com,REJECT
+# (第三方追踪)
+DOMAIN-SUFFIX,zhuanzfx.com,REJECT
+DOMAIN-SUFFIX,laiqukankan.com,REJECT
+DOMAIN,interface3.music.163.com.163jiasu.com,REJECT
+
+# (可选) 屏蔽内嵌的直播功能
+DOMAIN,api.look.163.com,REJECT
+
+# ========= 网易云音乐规则结束 =========
+
+
 # 屏蔽微信读书更新提示，需要配合 MIMT
 URL-REGEX,^https://i\.weread\.qq\.com/feature,REJECT-200
 URL-REGEX,^https://i\.weread\.qq\.com/mobileSync,REJECT-200
@@ -122,4 +171,4 @@ RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/r
 
 # 去除微信读书开屏更新提示
 [MITM]
-hostname = %APPEND% i.weread.qq.com
+hostname = %APPEND% i.weread.qq.com,interface3.music.163.com
