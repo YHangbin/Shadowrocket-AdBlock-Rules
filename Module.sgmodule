@@ -1,5 +1,5 @@
 #!name=融合模块
-#!desc=2025-12-21 12:41:01
+#!desc=2025-12-22 16:15:59
 #!arguments=YouTube ·屏蔽上传按钮:true, YouTube ·屏蔽选段按钮:true, YouTube ·屏蔽短片按钮:false, YouTube ·字幕翻译语言:off, YouTube ·歌词翻译语言:off
 #!arguments-desc=\n 参数说明：\n YouTube翻译语言：默认关闭，填入zh-Hans开启；\n 
 
@@ -858,7 +858,7 @@ URL-REGEX, "^https?:\/\/w{32}\.jddebug\.com\/diagnose\?", REJECT
 ^https?:\/\/api\.u51\.com\/(generic-config-gateway|rs-resys)\/api\/v\d\/(creditpage-config|recommend) - reject-200
 ^https?:\/\/api\.ulife\.group\/auth\/account\/entrance - reject-dict
 ^https?:\/\/api\.ulife\.group\/auth\/account\/getUpgradeStrategy - reject-dict
-^https?:\/\/api\.ulife\.group\/market\/frontEntrance\/getThirdAdvertising\?displayPort=1&type=15 - reject-dict
+^https?:\/\/api\.ulife\.group\/market\/frontEntrance\/getThirdAdvertising - reject-dict
 ^https?:\/\/api\.ulife\.group\/market\/memberCard\/listMemberCard\?isShowSecondaryCard=1 - reject-dict
 ^https?:\/\/api\.ulife\.group\/signintask\/adServing - reject-dict
 ^https?:\/\/api\.vistopia\.com\.cn\/api\/v\d\/home\/advertisement - reject
@@ -1362,7 +1362,7 @@ URL-REGEX, "^https?:\/\/w{32}\.jddebug\.com\/diagnose\?", REJECT
 ^https?:\/\/hfapp-service\.qweather\.net\/v\d\.\d\/app\/ad\/list\? - reject-dict
 ^https?:\/\/hmbaby\.simshine\.cn\/admin\/filter\/advert\/getAdvertLists - reject-dict
 ^https?:\/\/hmbaby\.simshine\.cn\/admin\/filter\/crowdFunding\/getNewProductData - reject-dict
-^https?:\/\/hoapp\.juneyaoair\.com\/data\/index\/(?:queryPopUpWinPic|getLoadPic|getRecommendProduct) - reject
+^https?:\/\/hoapp\.juneyaoair\.com\/data\/index\/(?:queryPopUpWinPic|getLoadPic|getRecommendProduct|creditCardAd) - reject
 ^https?:\/\/hoapp\.juneyaoair\.com\/version - reject-200
 ^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/recommendation\/(banner|carousel\/banners|myTab|openingBanner) - reject-dict
 ^https?:\/\/home\.mi\.com\/cgi-op\/api\/v1\/resource\/realtime\/openingBanner - reject-dict
@@ -2385,6 +2385,7 @@ http-response-jq ^https?:\/\/api\.pinduoduo\.com\/order\/ 'delpaths([["shipping"
 http-response-jq ^https?:\/\/api\.pinduoduo\.com\/search\? 'delpaths([["expansion"]])'
 http-response-jq ^https?:\/\/api\.posters\.meitu\.com\/common\/init\.json 'delpaths([["data","vip"]])'
 http-response-jq ^https?:\/\/api\.udache\.com\/gulfstream\/porsche\/v1\/dache_homepage_layout\? 'delpaths([["data","instances","car_icon_01","data","icon_info_new_agreement"]])'
+http-response-jq ^https?:\/\/api\.ulife\.group\/market\/homeIconDetail\/list\/v7 '.data.topFunctionalArea |= .[0:4]'
 http-response-jq ^https?:\/\/api\.weibo\.cn\/2\/cardlist\?aid= '.cards |= map(select((.mblog?|(.ad_marked?|type=="boolean")and.ad_marked==true)or(.card_group?|type=="array"and any(.[]?;.mblog?|(.ad_marked?|type=="boolean")and.ad_marked==true))|not))'
 http-response-jq ^https?:\/\/api\.weibo\.cn\/2\/comments\/build_comments\? '.datas[].data.ad_from_comment? = true'
 http-response-jq ^https?:\/\/api\.weibo\.cn\/2\/statuses\/friends\/timeline$ '.statuses|=map(select(.ad_marked!=true))'
@@ -2953,7 +2954,6 @@ xjsp =type=http-response, pattern=^https?:\/\/.+?\.(pipi|fuli|xiang(jiao|xiang))
 xmApp =type=http-response, pattern=^https?:\/\/mgesq.api.mgtv.com/dsl/index.+, script-path=https://xiangwanguan.github.io/Shadowrocket/Rewrite/JS/xmApp.js, requires-body=true, max-size=0
 youtube.response =type=http-response, pattern=^https?:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$, script-path=https://xiangwanguan.github.io/Shadowrocket/Rewrite/JS/youtube.response.js, requires-body=true, max-size=0, binary-body-mode=true, argument="{"lyricLang":"{{{YouTube ·歌词翻译语言}}}","captionLang":"{{{YouTube ·字幕翻译语言}}}","blockUpload":{{{YouTube ·屏蔽上传按钮}}},"blockImmersive":{{{YouTube ·屏蔽选段按钮}}},"blockShorts":{{{YouTube ·屏蔽短片按钮}}},"debug":false}"
 yunda =type=http-request, pattern=^https?:\/\/mbpxapi\.yundasys\.com(:\d+)?\/gateway\/interface, script-path=https://xiangwanguan.github.io/Shadowrocket/Rewrite/JS/yunda.js, requires-body=true, max-size=0
-yx =type=http-response, pattern=^https?:\/\/api\.ulife\.group\/market\/homeIconDetail\/list\/v7, script-path=https://xiangwanguan.github.io/Shadowrocket/Rewrite/JS/yx.js, requires-body=true, max-size=0
 zhangshanggongjiao =type=http-response, pattern=^https?:\/\/wx\.mygolbs\.com\/WxBusServer\/ApiData\.do, script-path=https://xiangwanguan.github.io/Shadowrocket/Rewrite/JS/zhangshanggongjiao.js, requires-body=true, max-size=0
 zhihu =type=http-response, pattern=^https?:\/\/api\.zhihu\.com\/(moments_v\d|topstory\/recommend(_v\d)?), script-path=https://xiangwanguan.github.io/Shadowrocket/Rewrite/JS/zhihu.js, requires-body=true, max-size=0
 zhihu =type=http-response, pattern=^https?:\/\/api\.zhihu\.com\/(v\d\/)?questions\/\d+\/(feeds|answers)\?, script-path=https://xiangwanguan.github.io/Shadowrocket/Rewrite/JS/zhihu.js, requires-body=true, max-size=0
