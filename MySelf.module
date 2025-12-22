@@ -151,8 +151,8 @@ DOMAIN-SUFFIX,tianwenca.com,REJECT
 
 # (重点) 屏蔽内嵌的腾讯系广告SDK
 DOMAIN-SUFFIX,video.qq.com,REJECT
-# 可能误伤公众号首页图片，故禁用
-DOMAIN-SUFFIX,qpic.cn,REJECT
+# (修正) 下方规则误伤微信公众号图片，故禁用
+# DOMAIN-SUFFIX,qpic.cn,REJECT
 
 # 日志、追踪与性能监控屏蔽
 DOMAIN,clientlog3.music.163.com,REJECT
