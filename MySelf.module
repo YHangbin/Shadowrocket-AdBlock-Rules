@@ -139,7 +139,8 @@ DOMAIN,iadmatapk.nosdn.127.net,REJECT
 DOMAIN,iadmusicmat.music.126.net,REJECT
 DOMAIN,ossgw.alicdn.com,REJECT
 DOMAIN-SUFFIX,360buyimg.com,REJECT
-DOMAIN-SUFFIX,alibabausercontent.com,REJECT
+# (修正) 下方规则过于宽泛，可能误伤首页图片，故禁用
+# DOMAIN-SUFFIX,alibabausercontent.com,REJECT
 DOMAIN-SUFFIX,miaozhen.com,REJECT
 
 # P2P加速与第三方SDK屏蔽
@@ -150,6 +151,7 @@ DOMAIN-SUFFIX,tianwenca.com,REJECT
 
 # (重点) 屏蔽内嵌的腾讯系广告SDK
 DOMAIN-SUFFIX,video.qq.com,REJECT
+# 可能误伤公众号首页图片，故禁用
 DOMAIN-SUFFIX,qpic.cn,REJECT
 
 # 日志、追踪与性能监控屏蔽
