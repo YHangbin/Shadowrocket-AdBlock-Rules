@@ -84,13 +84,17 @@ DOMAIN-SUFFIX,lf-cdn-tos.bytescm.com,REJECT
 DOMAIN-SUFFIX,log-api.pangolin-sdk-toutiao-b.com,REJECT
 DOMAIN-SUFFIX,ulogs.umengcloud.com,REJECT
 
+# 官方用于验证应用内购买（内购）和订阅状态的域名，先接触，观察状态
+#DOMAIN-SUFFIX,inappcheck.itunes.apple.com,REJECT
+#DOMAIN-SUFFIX,iphone-ld.apple.com,REJECT
+
 # 豆瓣
-DOMAIN-SUFFIX,inappcheck.itunes.apple.com,REJECT
+
 DOMAIN-SUFFIX,cece.com,REJECT
 DOMAIN-SUFFIX,i.gtimg.cn,REJECT
 DOMAIN-SUFFIX,api.weibo.com,REJECT
 DOMAIN-SUFFIX,errnewlog.umeng.com,REJECT
-DOMAIN-SUFFIX,iphone-ld.apple.com,REJECT
+
 DOMAIN-SUFFIX,m.douban.com,DIRECT
 DOMAIN-SUFFIX,mktm.jd.com,REJECT
 DOMAIN-SUFFIX,amonsul.douban.com,REJECT
