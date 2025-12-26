@@ -122,13 +122,13 @@ DOMAIN-SUFFIX,push.douban.com,REJECT
 
 [Rewrite]
 # 核心广告接口重写 (解决时序问题)
-^https?://interface3\.music\.163\.com/eapi/(ad|delivery|dai|aio)/.* url reject-tinygif
+^https?://interface3\.music\.163\.com/eapi/(ad|delivery|dai|aio)/.* url reject-dict
 
 # 应用内弹窗、浮窗、推广位重写 (解决时序问题)
-^https?://interface3\.music\.163\.com/eapi/(resource-exposure/pop-up|event/floating/layer|link/position/show/resource|middle/clientcfg/config/v2/full/delivery)/.* url reject-tinygif
+^https?://interface3\.music\.163\.com/eapi/(resource-exposure/pop-up|event/floating/layer|link/position/show/resource|middle/clientcfg/config/v2/full/delivery)/.* url reject-dict
 
 # 信息流、横幅、场景广告重写 (解决时序问题)
-^https?://interface3\.music\.163\.com/eapi/(rtrs|link/page/rcmd|link/scene/show/resource)/.* url reject-tinygif
+^https?://interface3\.music\.163\.com/eapi/(rtrs|link/page/rcmd|link/scene/show/resource)/.* url reject-dict
 
 [Rule]
 # 开屏与视频广告素材CDN屏蔽
