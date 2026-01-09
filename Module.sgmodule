@@ -1,5 +1,5 @@
 #!name=融合模块
-#!desc=2026-01-08 09:10:35
+#!desc=2026-01-09 08:42:17
 #!arguments=YouTube ·屏蔽上传按钮:true, YouTube ·屏蔽选段按钮:true, YouTube ·屏蔽短片按钮:false, YouTube ·字幕翻译语言:off, YouTube ·歌词翻译语言:off
 #!arguments-desc=\n 参数说明：\n YouTube翻译语言：默认关闭，填入zh-Hans开启；\n 
 
@@ -1279,6 +1279,7 @@ URL-REGEX, "^https?:\/\/w{32}\.jddebug\.com\/diagnose\?", REJECT
 ^https?:\/\/gaia\.ch\.com\/ECProduct\/homePageRevision\/(queryRecommendInfo|findAllInfo) - reject
 ^https?:\/\/gaia\.ch\.com\/ECProduct\/popupWindow - reject
 ^https?:\/\/gaia\.ch\.com\/ECPromotion\/appFlash - reject
+^https?:\/\/gaia\.ch\.com\/ECPromotion\/precisionactivity\/queryad - reject-dict
 ^https?:\/\/games\.mobileapi\.hupu\.com(\/.+)?\/(interfaceAd|status\/init) - reject-200
 ^https?:\/\/gateway(retry)?\.kugou\.com\/adp\/ad\/ - reject-dict
 ^https?:\/\/gateway(retry)?\.kugou\.com\/adp\/bubble\/v\d\/song_play - reject-dict
