@@ -1,5 +1,5 @@
 #!name=融合模块
-#!desc=2026-01-09 08:42:17
+#!desc=2026-01-11 11:29:45
 #!arguments=YouTube ·屏蔽上传按钮:true, YouTube ·屏蔽选段按钮:true, YouTube ·屏蔽短片按钮:false, YouTube ·字幕翻译语言:off, YouTube ·歌词翻译语言:off
 #!arguments-desc=\n 参数说明：\n YouTube翻译语言：默认关闭，填入zh-Hans开启；\n 
 
@@ -333,6 +333,7 @@ IP-CIDR, 47.99.42.29/32, REJECT,no-resolve
 IP-CIDR, 47.110.187.87/32, REJECT,no-resolve
 IP-CIDR, 47.243.147.125/32, REJECT,no-resolve
 IP-CIDR, 47.246.103.9/32, REJECT,no-resolve
+IP-CIDR, 47.246.103.10/32, REJECT,no-resolve
 IP-CIDR, 59.82.14.1/32, REJECT,no-resolve
 IP-CIDR, 59.82.14.161/32, REJECT,no-resolve
 IP-CIDR, 59.82.34.147/32, REJECT,no-resolve
@@ -1501,6 +1502,7 @@ URL-REGEX, "^https?:\/\/w{32}\.jddebug\.com\/diagnose\?", REJECT
 ^https?:\/\/lop-proxy\.jd\.com\/index\/queryTabBubble - reject
 ^https?:\/\/lop-proxy\.jd\.com\/order\/getCarbonIntegral - reject-dict
 ^https?:\/\/lop-proxy\.jd\.com\/search\/getQuestionnaireByOrderInfo - reject-dict
+^https?:\/\/lop-proxy\.jd\.com\/smartmp\/querySmartDecision - reject-dict
 ^https?:\/\/luckman\.suning\.com\/luck-web\/policy\/v\d\/msf\/index\.do - reject-200
 ^https?:\/\/m.360buyimg\.com\/mobilecms\/s1125x2436_jfs\/ - reject-200
 ^https?:\/\/m1\.ad\.10010\.com\/noticeMag\/images\/imageUpload\/2\d{3} - reject-img
