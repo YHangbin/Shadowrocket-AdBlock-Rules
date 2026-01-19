@@ -4,11 +4,23 @@
 
 [Rule]
 
-# icloud 同步走本地
+# 1. 云上贵州 & 中国区后缀 (范围匹配)
 DOMAIN-SUFFIX,icloud.com.cn,DIRECT
 DOMAIN-SUFFIX,apple.com.cn,DIRECT
-DOMAIN-SUFFIX,bag.itunes.apple.com,DIRECT
-DOMAIN-SUFFIX,time.asia.apple.com,DIRECT
+
+# 2. 商店配置 & 时间同步 (精确匹配)
+DOMAIN,bag.itunes.apple.com,DIRECT
+DOMAIN,time.asia.apple.com,DIRECT
+
+# 3. 游戏中心 Game Center (新增 - 精确匹配)
+DOMAIN,friend.gc.apple.com,DIRECT
+DOMAIN,profile.gc.apple.com,DIRECT
+
+# 4. 定位服务 & iCloud网关 (新增 - 精确匹配)
+# gs-loc-cn: 苹果地图中国区定位，必须直连
+DOMAIN,gs-loc-cn.apple.com,DIRECT
+# gateway: iCloud 全球同步网关，直连通常更快
+DOMAIN,gateway.icloud.com,DIRECT
 
 # 微软 TTS
 DOMAIN-SUFFIX,tts.speech.microsoft.com,DIRECT
