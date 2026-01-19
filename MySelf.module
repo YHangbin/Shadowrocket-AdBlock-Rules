@@ -4,6 +4,12 @@
 
 [Rule]
 
+# icloud 同步走本地
+DOMAIN-SUFFIX,icloud.com.cn,DIRECT
+DOMAIN-SUFFIX,apple.com.cn,DIRECT
+DOMAIN-SUFFIX,bag.itunes.apple.com,DIRECT
+DOMAIN-SUFFIX,time.asia.apple.com,DIRECT
+
 # 微软 TTS
 DOMAIN-SUFFIX,tts.speech.microsoft.com,DIRECT
 
