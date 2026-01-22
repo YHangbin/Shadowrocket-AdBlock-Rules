@@ -194,6 +194,9 @@ URL-REGEX,^https://i\.weread\.qq\.com/mobileSync,REJECT-200
 # ChatGPT 分流
 RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/OpenAI/OpenAI.list,US
 
+# Apple的
+RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/QuantumultX/Apple/Apple.list,DIRECT
+
 # 去除微信读书开屏更新提示
 [MITM]
 hostname = %APPEND% i.weread.qq.com,interface3.music.163.com
